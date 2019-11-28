@@ -1,0 +1,24 @@
+{
+  "name": "canvas-api2.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tapptastic/canvas-api2.0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tapptastic/canvas-api2.0/issues"
+  },
+  "homepage": "https://github.com/tapptastic/canvas-api2.0#readme",
+  "devDependencies": {
+    "typescript": "^3.7.2"
+  }
+}
