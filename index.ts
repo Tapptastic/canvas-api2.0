@@ -103,7 +103,7 @@ function RotatePoint(point, angle) {
     return new Engine.Point(newX, newY);
 }
 
-function Rotate(triangle: Engine.Triangle, angle: number) {
+function Rotate(triangle: Engine.Triangle, angle: number, antiClockwise?: boolean) {
     const rad = DegToRad(angle);
 
     let newPoints: Engine.Point[] = [];
