@@ -17,6 +17,14 @@ namespace Engine {
             this.y = y;
         }
 
+        Rotate(angle: number) {
+            const rad = Helper.DegToRad(angle);
+            const newX = (this.x * Math.cos(rad)) - (this.y * Math.sin(rad)); //?
+            const newY = (this.x * Math.sin(rad) + (this.y * Math.cos(rad))) //?
+
+            return new Engine.Point(newX, newY);
+        }
+
         Draw() {
             context.beginPath();
             context.ellipse(this.x, this.y, 3, 3, 0, 0, Math.PI * 2);
@@ -43,6 +51,12 @@ namespace Engine {
             this.Points.push(point2);
         }
 
+        Rotate(angle: number) {
+            for(let i = 0; i < this.Points.length; i += 1){
+                this.Points[i] = this.Points[i].Rotate(angle);
+            }
+        }
+
         Draw() {
             Line.Draw(this.Points[0], this.Points[1]);
             Line.Draw(this.Points[1], this.Points[2]);
@@ -65,6 +79,61 @@ namespace Engine {
 
         Draw() {
             context.strokeRect(this.x, this.y, this.w, this.h);
+        }
+    }
+
+    export enum UIInputs {
+        TEXT,
+        SLIDER,
+        NUMBER,
+        BUTTON
+    }
+
+    export class UI {
+        static Draw(inputType: UIInputs, callback: (this: GlobalEventHandlers, ev: Event) => any) {
+            switch (inputType) {
+                case UIInputs.SLIDER: {
+
+                }
+
+
+                case UIInputs.BUTTON: {
+                    const button = document.createElement('button');
+                    button.textContent = "Click";
+                    button.onclick = callback;
+
+                    document.body.append(button);
+
+                    return;
+                }
+
+                case UIInputs.TEXT: {
+                    const input = document.createElement('input');
+                    input.onkeydown = callback;
+
+                    document.body.append(input);
+
+                    return;
+                }
+
+                case UIInputs.NUMBER: {
+                    const input = document.createElement('input');
+                    input.type = "number";
+                    input.onchange = callback;
+
+                    document.body.append(input);
+
+                    return;
+                }
+
+                default: return
+            }
+        }
+    }
+
+    class Helper {
+        static DegToRad(deg): number {
+            return deg * Math.PI / 180;
         }
     }
 
@@ -95,44 +164,9 @@ const center = {
     y: Engine.canvas.clientHeight / 2
 }
 
-function RotatePoint(point, angle) {
-    const rad = DegToRad(angle);
-    const newX = (point.x * Math.cos(rad)) - (point.y * Math.sin(rad)); //?
-    const newY = (point.x * Math.sin(rad) + (point.y * Math.cos(rad))) //?
-
-    return new Engine.Point(newX, newY);
-}
-
-function Rotate(triangle: Engine.Triangle, angle: number, antiClockwise?: boolean) {
-    const rad = DegToRad(angle);
-
-    let newPoints: Engine.Point[] = [];
-
-    triangle.Points.map(point => {
-        //Take the centre x & y from point x & y
-        //Rotate point 
-        //Add centre x & y to point
-
-        //See about world space and object space
-        newPoints.push(RotatePoint({ x: point.x , y: point.y }, angle));
-        // const newPoint = RotatePoint(new Engine.Point(
-        //     center.x - point.x,
-        //     center.y - point.y
-        // ), angle)
-
-        // newPoints.push(
-        //     new Engine.Point(newPoint.x + center.x, newPoint.y + center.y)
-        // );
-    });
-
-    return newPoints;
-}
-
-function DegToRad(deg) {
-    return deg * Math.PI / 180;
-}
-
 // Engine.context.translate(Engine.canvas.clientWidth / 2, Engine.canvas.clientHeight / 2);
+
+// let angle = 0;
 
 const p = new Engine.Point(20, 20);
 const p1 = new Engine.Point(40, 40);
@@ -140,12 +174,33 @@ const p2 = new Engine.Point(60, 20);
 
 const t = new Engine.Triangle(p, p1, p2);
 
-const points = Rotate(t, 13);
-const t1 = new Engine.Triangle(
-    points[0],
-    points[1],
-    points[2]
-);
-
 t.Draw();
-t1.Draw();
+t.Rotate(20);
+t.Draw();
+t.Rotate(40);
+t.Draw();
+
+// Engine.UI.Draw(Engine.UIInputs.NUMBER, (ev: Event) => {
+//     Engine.context.clearRect(0, 0, Engine.canvas.clientWidth, Engine.canvas.clientHeight);
+
+//     angle = ev.target.value;
+
+//     const points = Rotate(t, angle);
+//     const t1 = new Engine.Triangle(
+//         points[0],
+//         points[1],
+//         points[2]
+//     );
+
+//     console.log(t1, points);
+
+//     t1.Draw();
+// });
+
+// Engine.UI.Draw(Engine.UIInputs.BUTTON, (ev: Event) => {
+//     Engine.context.clearRect(0, 0, Engine.canvas.clientWidth, Engine.canvas.clientHeight);
+// })
+
+
+// t.Draw();
+
