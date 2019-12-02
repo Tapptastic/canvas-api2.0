@@ -52,7 +52,9 @@ namespace Engine {
         }
 
         Rotate(angle: number) {
-            for(let i = 0; i < this.Points.length; i += 1){
+            //Need to rotate around origin 
+            //Need to set the origin as it's center and then calculate for World Space and Object Space
+            for (let i = 0; i < this.Points.length; i += 1) {
                 this.Points[i] = this.Points[i].Rotate(angle);
             }
         }
@@ -87,6 +89,46 @@ namespace Engine {
         SLIDER,
         NUMBER,
         BUTTON
+    }
+
+    export class Vector {
+        x: number;
+        y: number;
+        mag: number;
+        direction: string;
+
+        constructor(x: number, y: number) {
+            this.x = x;
+            this.y = y;
+
+            this.mag = Math.sqrt((this.x * this.x) + (this.y * this.y));
+            // this.mag = (this.x * this.x) + (this.y * this.y);
+        }
+
+
+
+        Dot(vector: Vector) {
+            return (this.x * vector.x) + (this.y * vector.y);
+        }
+
+        Cross() {
+
+        }
+
+        AngleBetween(vector: Vector, degress?: boolean) {
+            const theta = Math.acos(this.Dot(vector) / (this.mag * vector.mag)); 
+
+            if (degress)
+                return Helper.RadToDeg(theta);
+
+            return theta;
+        }
+
+        Draw() {
+            Engine.context.moveTo(0, 0);
+            Engine.context.lineTo(this.x, this.y);
+            Engine.context.stroke();
+        }
     }
 
     export class UI {
@@ -135,6 +177,10 @@ namespace Engine {
         static DegToRad(deg): number {
             return deg * Math.PI / 180;
         }
+
+        static RadToDeg(rad): number {
+            return rad * 180 / Math.PI;
+        }
     }
 
     export class Cirlce {
@@ -164,43 +210,20 @@ const center = {
     y: Engine.canvas.clientHeight / 2
 }
 
-// Engine.context.translate(Engine.canvas.clientWidth / 2, Engine.canvas.clientHeight / 2);
+//See about World Space and Object Space
 
-// let angle = 0;
 
-const p = new Engine.Point(20, 20);
-const p1 = new Engine.Point(40, 40);
-const p2 = new Engine.Point(60, 20);
+//Draw two triangles and roate one of them
+
+Engine.context.translate(center.x, center.y);
+
+const p = new Engine.Point();
+const p1 = new Engine.Point(30,0);
+const p2 = new Engine.Point(0,30);
 
 const t = new Engine.Triangle(p, p1, p2);
 
 t.Draw();
-t.Rotate(20);
-t.Draw();
-t.Rotate(40);
-t.Draw();
 
-// Engine.UI.Draw(Engine.UIInputs.NUMBER, (ev: Event) => {
-//     Engine.context.clearRect(0, 0, Engine.canvas.clientWidth, Engine.canvas.clientHeight);
-
-//     angle = ev.target.value;
-
-//     const points = Rotate(t, angle);
-//     const t1 = new Engine.Triangle(
-//         points[0],
-//         points[1],
-//         points[2]
-//     );
-
-//     console.log(t1, points);
-
-//     t1.Draw();
-// });
-
-// Engine.UI.Draw(Engine.UIInputs.BUTTON, (ev: Event) => {
-//     Engine.context.clearRect(0, 0, Engine.canvas.clientWidth, Engine.canvas.clientHeight);
-// })
-
-
+t.Rotate(90);
 // t.Draw();
-
